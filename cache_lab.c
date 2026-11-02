@@ -24,7 +24,15 @@ int allocate_matrix(int size) {
     
     for (int i = 0; i < size; i++) {
         matrix[i] = (int*)malloc(size * sizeof(int));
-        if (matrix[i] == NULL) return 0;
+        if (matrix[i] == NULL) {
+            // Free previously allocated rows if allocation fails
+            for (int j = 0; j < i; j++) {
+                free(matrix[j]);
+            }
+            free(matrix);
+            matrix = NULL;
+            return 0;
+        }
         
         // Initialize with values
         for (int j = 0; j < size; j++) {
@@ -53,17 +61,16 @@ void free_matrix() {
  * Traverses the matrix in ROW-MAJOR order.
  * Visits every element in row 0, then row 1, then row 2, etc.
  * Returns the sum of all elements.
- * 
- * TODO: Implement this function.
- * Hint: The outer loop should iterate over rows, the inner loop over columns.
  */
 long long traverse_row_major() {
     long long sum = 0;
     
-    // ============================================
-    // TODO: Implement row-major traversal
-    // Visit elements in order: [0][0], [0][1], [0][2], ... [1][0], [1][1], ...
-    // ============================================
+    // Visit each row and add its values from left to right
+    for (int row = 0; row < current_size; row++) {
+        for (int col = 0; col < current_size; col++) {
+            sum += matrix[row][col];
+        }
+    }
     
     return sum;
 }
@@ -72,17 +79,16 @@ long long traverse_row_major() {
  * Traverses the matrix in COLUMN-MAJOR order.
  * Visits every element in column 0, then column 1, then column 2, etc.
  * Returns the sum of all elements.
- * 
- * TODO: Implement this function.
- * Hint: The outer loop should iterate over columns, the inner loop over rows.
  */
 long long traverse_column_major() {
     long long sum = 0;
     
-    // ============================================
-    // TODO: Implement column-major traversal
-    // Visit elements in order: [0][0], [1][0], [2][0], ... [0][1], [1][1], ...
-    // ============================================
+    // Visit each column and add its values from top to bottom
+    for (int col = 0; col < current_size; col++) {
+        for (int row = 0; row < current_size; row++) {
+            sum += matrix[row][col];
+        }
+    }
     
     return sum;
 }
